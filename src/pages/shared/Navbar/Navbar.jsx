@@ -3,13 +3,25 @@ import { MdModeNight, MdOutlineWbSunny, MdShoppingBag } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../../assets/logo.svg";
 import { useTheme } from "../../../hooks/useThemeMode";
+import { useContext } from "react";
+import { AuthContext } from "../../../Providers/AuthProvider";
 
 const Navbar = () => {
+  const {user, logOut} = useContext(AuthContext)
+
+  const handleLogOut = ()=> {
+      logOut()
+      .then()
+      .catch(error=> {
+        console.log(error);
+      })
+  }
+
   const navLinks = (
     <>
       <li>
         <NavLink
-          to="/home"
+          to="/"
           className={({ isActive, isPending }) =>
             isPending ? "pending" : isActive ? "active" : ""
           }
@@ -57,6 +69,41 @@ const Navbar = () => {
           Contact
         </NavLink>
       </li>
+     {user?.email ?  
+     <>
+      <li>
+        <NavLink
+          to="/bookings"
+          className={({ isActive, isPending }) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          My Bookings
+        </NavLink>
+      </li>
+     <li>
+       <button onClick={handleLogOut}
+         to="/"
+         className={({ isActive, isPending }) =>
+           isPending ? "pending" : isActive ? "active" : ""
+         }
+       >
+         Log Out
+       </button>
+     </li> 
+     </>
+     :
+       <li>
+       <NavLink
+         to="/login"
+         className={({ isActive, isPending }) =>
+           isPending ? "pending" : isActive ? "active" : ""
+         }
+       >
+         Login
+       </NavLink>
+     </li>
+     }
     </>
   );
   const { changeTheme, mode } = useTheme();
